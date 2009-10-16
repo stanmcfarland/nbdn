@@ -54,7 +54,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="dto\Product.cs" />
+    <Compile Include="infrastructure\ChainedCommand.cs" />
     <Compile Include="infrastructure\Command.cs" />
+    <Compile Include="infrastructure\CommandBuilder.cs" />
+    <Compile Include="infrastructure\containers\ApplicationStartupItemFactory.cs" />
     <Compile Include="infrastructure\containers\ContainerItemResolutionException.cs" />
     <Compile Include="infrastructure\containers\DefaultContainer.cs" />
     <Compile Include="infrastructure\containers\ContainerItemFactory.cs" />
@@ -66,10 +69,13 @@
     <Compile Include="tasks\startup\ApplicationStartup.cs" />
     <Compile Include="tasks\startup\ApplicationStartupItem.cs" />
     <Compile Include="tasks\startup\ConfigureApplicationCommands.cs" />
+    <Compile Include="tasks\startup\ConfigureCoreServices.cs" />
     <Compile Include="tasks\startup\ConfigureFrontController.cs" />
     <Compile Include="tasks\startup\ConfigureRouting.cs" />
     <Compile Include="tasks\startup\ConfigureServiceLayer.cs" />
-    <Compile Include="tasks\startup\MutableContainer.cs" />
+    <Compile Include="tasks\startup\DefaultFileReader.cs" />
+    <Compile Include="tasks\startup\FileReader.cs" />
+    <Compile Include="tasks\startup\Start.cs" />
     <Compile Include="tasks\stubs\StubCatalogBrowsingTasks.cs" />
     <Compile Include="web\application\AddProductToCart.cs" />
     <Compile Include="web\application\ViewModelKeys.cs" />

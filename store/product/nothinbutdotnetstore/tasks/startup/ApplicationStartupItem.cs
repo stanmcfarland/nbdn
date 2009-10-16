@@ -1,4 +1,4 @@
-using developwithpassion.bdd.core.commands;
+using nothinbutdotnetstore.infrastructure;
 
 namespace nothinbutdotnetstore.tasks.startup
 {

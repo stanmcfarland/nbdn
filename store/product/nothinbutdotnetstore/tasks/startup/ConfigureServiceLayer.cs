@@ -1,4 +1,5 @@
-﻿using nothinbutdotnetstore.tasks.stubs;
+﻿using nothinbutdotnetstore.infrastructure.containers;
+using nothinbutdotnetstore.tasks.stubs;
 
 namespace nothinbutdotnetstore.tasks.startup
 {

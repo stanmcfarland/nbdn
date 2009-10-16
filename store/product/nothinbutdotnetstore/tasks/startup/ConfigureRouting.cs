@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using nothinbutdotnetstore.infrastructure.containers;
 using nothinbutdotnetstore.web.application;
 using nothinbutdotnetstore.web.core;
 
@@ -15,7 +16,7 @@ namespace nothinbutdotnetstore.tasks.startup
 
         public void run()
         {
-            container.register<IEnumerable<RequestCommand>>(() => create_routes());
+            container.register<IEnumerable<RequestCommand>>(create_routes);
         }
 
         private IEnumerable<RequestCommand> create_routes()

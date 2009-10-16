@@ -47,7 +47,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.TeamSystem.Data.UnitTesting, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -57,10 +60,12 @@
     <None Include="commit.bat" />
     <None Include="local_properties.rb.customize" />
     <None Include="open.bat" />
+    <None Include="product\config\app.config" />
     <None Include="product\config\app.config.vista.template" />
     <None Include="product\config\app.config.xp.template" />
     <None Include="product\config\hibernate.cfg.xml.template" />
     <None Include="product\config\log4net.config.xml.template" />
+    <None Include="product\config\StartupItems.cfg.template" />
     <None Include="product\sql\data\001\001_populate_foo.sql.template" />
     <None Include="product\sql\ddl\001\001_db.sql.template" />
     <None Include="product\sql\ddl\001\002_security.sql.template" />
@@ -86,6 +91,9 @@
       <ProductName>.NET Framework 3.5</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="product\config\DatabaseSetup.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

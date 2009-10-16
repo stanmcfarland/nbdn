@@ -37,5 +37,8 @@ namespace nothinbutdotnetstore.tests.infrastructure
             static object returned_type;
             static Func<object> strategy;
         }
+
+
+       
     }
 }

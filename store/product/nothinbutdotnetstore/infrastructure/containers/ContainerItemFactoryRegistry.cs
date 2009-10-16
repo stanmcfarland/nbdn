@@ -10,7 +10,6 @@ namespace nothinbutdotnetstore.infrastructure.containers
 
     public interface MutableContainerItemFactoryRegistry : ContainerItemFactoryRegistry
     {
-        void register<T>(ContainerItemFactory factory);
-        
+        void register<T>(ContainerItemFactory factory);        
     }
 }

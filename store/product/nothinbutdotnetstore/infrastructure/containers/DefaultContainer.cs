@@ -39,9 +39,9 @@ namespace nothinbutdotnetstore.infrastructure.containers
             registry.register<T>(factory);
         }
 
-        public void register<T>(T item)
+        public void register<T>(Func<object> item)
         {
-            registry.register<T>(new FunctionalContainerItemFactory(() => item));
+            registry.register<T>(new FunctionalContainerItemFactory(item));
         }
     }
 }

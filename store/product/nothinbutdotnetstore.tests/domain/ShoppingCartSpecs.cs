@@ -1,187 +1,203 @@
- using System.Collections.Generic;
- using System.Linq;
- using developwithpassion.bdd.contexts;
- using developwithpassion.bdd.harnesses.mbunit;
- using developwithpassion.bdddoc.core;
- using nothinbutdotnetstore.domain;
- using nothinbutdotnetstore.dto;
+using System.Collections.Generic;
+using System.Linq;
+using developwithpassion.bdd.contexts;
+using developwithpassion.bdd.core.extensions;
+using developwithpassion.bdd.harnesses.mbunit;
+using developwithpassion.bdd.mocking.rhino;
+using developwithpassion.bdddoc.core;
+using nothinbutdotnetstore.domain;
+using Rhino.Mocks;
 
 namespace nothinbutdotnetstore.tests.domain
- {   
-     public class ShoppingCartSpecs
-     {
-         public abstract class concern : observations_for_a_sut_without_a_contract<ShoppingCart>
-         {
-        
-         }
+{
+    public class ShoppingCartSpecs
+    {
+        public abstract class concern : observations_for_a_sut_without_a_contract<ShoppingCart>
+        {
+            context c = () =>
+            {
+                shopping_cart_items = new List<ShoppingCartItem>();
+                cart_item_factory = the_dependency<ShoppingCartItemFactory>();
+                provide_a_basic_sut_constructor_argument(shopping_cart_items);
+            };
 
-         [Concern(typeof(ShoppingCart))]
-         public class when_adding_an_item_to_the_shopping_cart : concern
-         {
-             context c = () =>
-             {
-                 item_to_add = new ShoppingCartItem();
-                 shopping_cart_items = new List<ShoppingCartItem>();
-                 provide_a_basic_sut_constructor_argument(shopping_cart_items);
-             };
+            static protected IList<ShoppingCartItem> shopping_cart_items;
+            static protected ShoppingCartItemFactory cart_item_factory;
+        }
 
-             because b = () =>
-             {
-                 sut.add_item(item_to_add);
-             };
+        [Concern(typeof (ShoppingCart))]
+        public class when_adding_an_item_to_the_shopping_cart : concern
+        {
+            context c = () =>
+            {
+                item_for_pepsi = new ShoppingCartItem();
+                can_of_pepsi = an<Product>();
 
-        
-             it the_item_should_be_stored_in_the_list_of_shopping_cart_items = () =>
-             {
-                 sut.all_items.should_contain(item_to_add);
-             };
+                cart_item_factory.Stub(factory => factory.create_from(can_of_pepsi)).Return(item_for_pepsi);
+            };
 
-             static IList<ShoppingCartItem> shopping_cart_items;
-             static ShoppingCartItem item_to_add;
-         }
+            because b = () =>
+            {
+                sut.add(can_of_pepsi);
+            };
 
-         [Concern(typeof(ShoppingCart))]
-         public class when_removing_an_item_from_the_shopping_cart : concern
-         {
-             context c = () =>
-             {
-                 item_to_remove = new ShoppingCartItem();
-                 shopping_cart_items = new List<ShoppingCartItem>();
-                 provide_a_basic_sut_constructor_argument(shopping_cart_items);
-             };
 
-             because b = () =>
-             {
-                 sut.remove_item(item_to_remove);
-             };
+            it the_item_should_be_stored_in_the_list_of_shopping_cart_items = () =>
+            {
+                shopping_cart_items.should_contain(item_for_pepsi);
+            };
 
-             it the_item_should_no_longer_be_in_the_list_of_shopping_cart_items = () =>
-             {
-                 sut.all_items.should_not_contain(item_to_remove);
-             };
+            static ShoppingCartItem item_for_pepsi;
+            static Product can_of_pepsi;
+        }
 
-             static IList<ShoppingCartItem> shopping_cart_items;
-             static ShoppingCartItem item_to_remove;
-         }
+        public abstract class concern_for_a_cart_with_a_can_of_pepsi_in_it : concern
+        {
+            context c = () =>
+            {
+                item_for_pepsi = an<ShoppingCartItem>();
+                can_of_pepsi = an<Product>();
+                item_for_pepsi.Stub(item => item.is_item_for(can_of_pepsi)).Return(true);
+                shopping_cart_items.Add(item_for_pepsi);
+            };
 
-         [Concern(typeof(ShoppingCart))]
-         public class when_emptying_the_shopping_cart : concern
-         {
-             context c = () =>
-             {
-                 shopping_cart_items = new List<ShoppingCartItem>()
-                                           {
-                                               {new ShoppingCartItem()},
-                                               {new ShoppingCartItem()}
-                                           };
+            static protected ShoppingCartItem item_for_pepsi;
+            static protected Product can_of_pepsi;
+        }
 
-                 provide_a_basic_sut_constructor_argument(shopping_cart_items);
-             };
+        [Concern(typeof (ShoppingCart))]
+        public class when_adding_an_product_that_is_already_in_the_cart : concern_for_a_cart_with_a_can_of_pepsi_in_it
+        {
+            because b = () =>
+            {
+                sut.add(can_of_pepsi);
+            };
 
-             because b = () =>
-             {
-                 sut.empty_the_cart();
-             };
+            it should_increment_the_quantity_of_the_item_for_the_product = () =>
+            {
+                item_for_pepsi.received(item => item.increment_quantity());
+            };
+        }
 
-             it should_not_have_any_items_in_the_cart = () =>
-             {
-                 sut.all_items.Count().should_be_equal_to(0);
-             };
+        [Concern(typeof (ShoppingCart))]
+        public class when_adding_a_bag_of_chips_to_a_cart_that_only_contains_a_can_of_pepsi : concern_for_a_cart_with_a_can_of_pepsi_in_it
+        {
+            context c = () =>
+            {
+                item_for_pringles = an<ShoppingCartItem>();
+                pringles = an<Product>();
+                cart_item_factory.Stub(factory => factory.create_from(pringles)).Return(item_for_pringles);
+            };
 
-             static IList<ShoppingCartItem> shopping_cart_items;
-             static ShoppingCartItem item_to_remove;
-         }
+            because b = () =>
+            {
+                sut.add(pringles);
+            };
 
-         [Concern(typeof(ShoppingCart))]
-         public class when_viewing_the_total_cost_of_the_shopping_cart : concern
-         {
-             context c = () =>             
-             {
-                 expected_total_cost = 150.25M;
-                 shopping_cart_items = new List<ShoppingCartItem>()
-                                           {
-                                               {new ShoppingCartItem() {unit_price = 100.00M}},
-                                               {new ShoppingCartItem() {unit_price = 50.25M}}
-                                           };
-                 
-                 provide_a_basic_sut_constructor_argument(shopping_cart_items);
-             };
+            it should_store_the_bag_of_chips = () =>
+            {
+                shopping_cart_items.Count.should_be_equal_to(2);
+                shopping_cart_items.should_contain(item_for_pringles);
+            };
 
-             because b = () =>
-             {
-                 actual_total_cost = sut.total_cost;
-             };
+            static Product pringles;
+            static ShoppingCartItem item_for_pringles;
+        }
 
-             it should_return_the_sum_of_the_cost_of_all_shopping_cart_items_in_the_shopping_cart = () =>
-             {
-                 actual_total_cost.should_be_equal_to(expected_total_cost);
-             };
+        [Concern(typeof (ShoppingCart))]
+        public class when_removing_an_item_from_the_shopping_cart : concern_for_a_cart_with_a_can_of_pepsi_in_it
+        {
+            because b = () =>
+            {
+                sut.remove(can_of_pepsi);
+            };
 
-             static IList<ShoppingCartItem> shopping_cart_items;
-             static decimal actual_total_cost;
-             static decimal expected_total_cost;
-         }
+            it the_item_should_no_longer_be_in_the_list_of_shopping_cart_items = () =>
+            {
+                shopping_cart_items.Count.should_be_equal_to(0);
+            };
+        }
 
-         [Concern(typeof(ShoppingCart))]
-         public class when_modifying_the_quantity_of_an_item_in_the_cart : concern
-         {
-             context c = () =>             
-             {
-                 updated_quantity = 3;
-                 item_to_update = new ShoppingCartItem() {quantity = 1};
-                 shopping_cart_items = new List<ShoppingCartItem>() { item_to_update };
-                 
-                 provide_a_basic_sut_constructor_argument(shopping_cart_items);
-             };
+        [Concern(typeof (ShoppingCart))]
+        public class when_attempting_to_remove_an_product_that_it_does_not_contain : concern_for_a_cart_with_a_can_of_pepsi_in_it
+        {
+            context c = () =>
+            {
+                product_not_in_the_cart = an<Product>();
+            };
 
-             because b = () =>
-             {
-                 sut.update_quantity(item_to_update, updated_quantity);
-             };
+            because b = () =>
+            {
+                sut.remove(product_not_in_the_cart);
+            };
 
-             it should_update_the_quantity_of_the_item_to_the_new_quantity = () =>
-             {
-                 sut.all_items.should_contain_item_matching(x => x.quantity == updated_quantity);
-             };
+            it should_not_do_anything = () =>
+            {
+                shopping_cart_items.Count.should_be_equal_to(1);
+            };
 
-             static IList<ShoppingCartItem> shopping_cart_items;
-             static int updated_quantity;
-             static ShoppingCartItem item_to_update;
-         }
+            static Product product_not_in_the_cart;
+        }
 
-         [Concern(typeof(ShoppingCart))]
-         public class when_getting_a_departmental_breakdown_of_items_in_the_shopping_cart : concern
-         {
-             context c = () =>
-             {
-                 shopping_cart_items = new List<ShoppingCartItem>() 
-                 { 
-                     {new ShoppingCartItem(){ unit_price = 25M, department = bakery, quantity = 2 }},
-                     {new ShoppingCartItem(){ unit_price = 10M, department = bakery, quantity = 1 }},
-                     {new ShoppingCartItem(){ unit_price = 5M, department = pharmacy, quantity = 1 }},
-                     {new ShoppingCartItem(){ unit_price = 15M, department = pharmacy, quantity = 2 }},
-                     {new ShoppingCartItem(){ unit_price = 3.5M, department = pharmacy, quantity = 3 }}
-                 };
+        [Concern(typeof (ShoppingCart))]
+        public class when_emptying_the_shopping_cart : concern
+        {
+            context c = () =>
+            {
+                Enumerable.Range(1, 100).each(i => shopping_cart_items.Add(an<ShoppingCartItem>()));
+            };
 
-                 provide_a_basic_sut_constructor_argument(shopping_cart_items);
-             };
+            because b = () =>
+            {
+                sut.empty();
+            };
 
-             because b = () =>
-             {
-                 results = sut.group_by(x => x.department);
-             };
+            it should_not_have_any_items_in_the_cart = () =>
+            {
+                shopping_cart_items.Count.should_be_zero();
+            };
+        }
 
-             it should_return_a_list_of_items_grouped_by_department = () =>
-             {
-                 results.Where(x => x.Key == bakery).Count().should_be_equal_to(2);
-                 results.Where(x => x.Key == pharmacy).Count().should_be_equal_to(3);
-             };
 
-             static IList<ShoppingCartItem> shopping_cart_items;
-             static IEnumerable<IGrouping<Department, ShoppingCartItem>> results;
-         }
+        [Concern(typeof (ShoppingCart))]
+        public class when_modifying_the_quantity_of_an_item_in_the_cart : concern_for_a_cart_with_a_can_of_pepsi_in_it
+        {
+            context c = () =>
+            {
+                updated_quantity = 2;
+            };
 
-         static Department bakery = new Department() {department_name = "Bakery"};
-         static Department pharmacy = new Department() {department_name = "Pharmacy"};
-     }
- }
+            because b = () =>
+            {
+                sut.change_quantity(can_of_pepsi, updated_quantity);
+            };
+
+            it should_update_the_quantity_of_the_item_to_the_new_quantity = () =>
+            {
+                item_for_pepsi.received(item => item.change_quantity_to(updated_quantity));
+            };
+
+            static int updated_quantity;
+        }
+
+        [Concern(typeof (ShoppingCart))]
+        public class when_changing_the_quantity_of_a_product_causes_the_item_to_be_empty : concern_for_a_cart_with_a_can_of_pepsi_in_it
+        {
+            context c = () =>
+            {
+                item_for_pepsi.Stub(item => item.is_empty()).Return(true);
+            };
+
+            because b = () =>
+            {
+                sut.change_quantity(can_of_pepsi, 0);
+            };
+
+            it should_be_removed_from_the_cart = () =>
+            {
+                shopping_cart_items.should_not_contain(item_for_pepsi);
+            };
+
+        }
+    }
+}

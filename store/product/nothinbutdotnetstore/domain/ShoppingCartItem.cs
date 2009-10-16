@@ -1,32 +1,27 @@
-using nothinbutdotnetstore.dto;
+using System;
 
 namespace nothinbutdotnetstore.domain
 {
     public class ShoppingCartItem
     {
-        public ShoppingCartItem()
+        public virtual bool is_item_for(Product product)
         {
-            this.quantity = 1;
+            throw new NotImplementedException();
         }
 
-        public decimal amount
+        public virtual void increment_quantity()
         {
-            get { return quantity * unit_price; }
+            throw new NotImplementedException();
         }
 
-        public decimal unit_price
+        public virtual void change_quantity_to(int updated_quantity)
         {
-            get; set;
+            throw new NotImplementedException();
         }
 
-        public int quantity
+        public virtual bool is_empty()
         {
-            get; set;
-        }
-
-        public Department department
-        {
-            get; set;
+            throw new NotImplementedException();
         }
     }
 }

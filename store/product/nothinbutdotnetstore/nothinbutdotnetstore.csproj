@@ -53,8 +53,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="domain\Product.cs" />
     <Compile Include="domain\ShoppingCart.cs" />
     <Compile Include="domain\ShoppingCartItem.cs" />
+    <Compile Include="domain\ShoppingCartItemFactory.cs" />
     <Compile Include="dto\Product.cs" />
     <Compile Include="infrastructure\ChainedCommand.cs" />
     <Compile Include="infrastructure\Command.cs" />

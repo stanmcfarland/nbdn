@@ -1,5 +1,3 @@
-using System;
-
 namespace nothinbutdotnetstore.tasks.startup
 {
     public class ApplicationStartup

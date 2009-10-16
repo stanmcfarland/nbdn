@@ -1,55 +1,71 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using developwithpassion.bdd.core.extensions;
-using nothinbutdotnetstore.dto;
 
 namespace nothinbutdotnetstore.domain
 {
     public class ShoppingCart
     {
         IList<ShoppingCartItem> shopping_cart_items;
+        ShoppingCartItemFactory cart_item_factory;
 
-        public ShoppingCart(IList<ShoppingCartItem> shopping_cart_items)
+        public ShoppingCart(IList<ShoppingCartItem> shopping_cart_items, ShoppingCartItemFactory cart_item_factory)
         {
             this.shopping_cart_items = shopping_cart_items;
+            this.cart_item_factory = cart_item_factory;
         }
 
-        public IEnumerable<ShoppingCartItem> all_items
+        public void add(Product product)
         {
-            get { return new ReadOnlyCollection<ShoppingCartItem>(shopping_cart_items).one_at_a_time(); }
+            if (already_contains_item_for(product))
+            {
+                get_item_for(product).increment_quantity();
+                return;
+            }
+            shopping_cart_items.Add(cart_item_factory.create_from(product));
         }
 
-        public decimal total_cost
+        ShoppingCartItem get_item_for(Product product)
         {
-            get { return shopping_cart_items.Sum(x => x.amount); }
+            return shopping_cart_items.FirstOrDefault(item => item.is_item_for(product)) ?? new MissingCartItem();
         }
 
-        public void add_item(ShoppingCartItem item)
+        bool already_contains_item_for(Product product)
         {
-           shopping_cart_items.Add(item);
+            return shopping_cart_items.Any(item => item.is_item_for(product));
         }
 
-        public void remove_item(ShoppingCartItem item)
+        public void remove(Product product)
         {
-            shopping_cart_items.Remove(item);
+            shopping_cart_items.Remove(get_item_for(product));
         }
 
-        public void empty_the_cart()
+        public void empty()
         {
-           shopping_cart_items.Clear();
+            shopping_cart_items.Clear();
         }
 
-        public void update_quantity(ShoppingCartItem item_to_update, int quantity)
+        public void change_quantity(Product product, int new_quantity)
         {
-            shopping_cart_items[shopping_cart_items.IndexOf(item_to_update)].quantity = quantity;
+            var item = get_item_for(product);
+            item.change_quantity_to(new_quantity);
+            if (item.is_empty()) shopping_cart_items.Remove(item);
         }
 
-        public IEnumerable<IGrouping<Property, ShoppingCartItem>> group_by<Property>(Func<ShoppingCartItem, Property> property_accessor)
+        class MissingCartItem : ShoppingCartItem
         {
-            return shopping_cart_items.GroupBy(property_accessor).Select(x => x);
+            public override bool is_item_for(Product product)
+            {
+                return false;
+            }
+
+            public override void increment_quantity() {}
+
+            public override void change_quantity_to(int updated_quantity) {}
+
+            public override bool is_empty()
+            {
+                return true;
+            }
         }
     }
 }

@@ -1,15 +1,11 @@
-using System;
-
 namespace nothinbutdotnetstore.domain
 {
     public class ShoppingCartItem
     {
-        private Product product;
+        Product product;
         public int quantity { get; private set; }
 
-        public ShoppingCartItem(): this(new Product(), 1)
-        {
-        }
+        public ShoppingCartItem() {}
 
         public ShoppingCartItem(Product product, int quantity)
         {
@@ -19,7 +15,7 @@ namespace nothinbutdotnetstore.domain
 
         public virtual bool is_item_for(Product product)
         {
-            return this.product == product;
+            return this.product.Equals(product);
         }
 
         public virtual void increment_quantity()

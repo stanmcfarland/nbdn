@@ -1,0 +1,22 @@
+As a shopper
+  I want to be able to add an item to my shopping cart
+  so that I can potentially choose to purchase it.
+
+As a shopper
+  I want to be able to remove an item from my shopping cart
+  so that I can remove that I no longer want to purchase.
+
+
+As a shopper
+  I want to be able to empty my shopping cart
+
+As a shopper
+  I want to be able to see the total cost of my shopping cart
+
+As a shopper
+  I want to be able to change the quantity of an item in my shopping cart
+
+As a shopper
+  I want to be able to get a departmental breakdown of the items in my cart. So that I can come into the store and purchase the items. 
+
+

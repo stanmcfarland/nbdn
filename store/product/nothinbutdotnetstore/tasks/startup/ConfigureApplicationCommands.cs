@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using developwithpassion.commons.core.infrastructure.containers;
-using nothinbutdotnetstore.infrastructure.containers;
 using nothinbutdotnetstore.web.application;
 using nothinbutdotnetstore.web.core;
 
@@ -9,29 +5,19 @@ namespace nothinbutdotnetstore.tasks.startup
 {
     public class ConfigureApplicationCommands : ApplicationStartupItem
     {
+        MutableContainer container;
+
+        public ConfigureApplicationCommands(MutableContainer container)
+        {
+            this.container = container;
+        }
+
         public void run()
         {
-            register<ViewMainDepartments>(() => new ViewMainDepartments(resolve<CatalogBrowsingTasks>(), resolve<ResponseEngine>()));
-            register<ViewSubDepartments>(() => new ViewSubDepartments(resolve<ResponseEngine>(), resolve<CatalogBrowsingTasks>()));
-            register<ViewProductsInDepartment>(() => new ViewProductsInDepartment(resolve<ResponseEngine>(), resolve<CatalogBrowsingTasks>()));
-            register<AddProductToCart>(() => new AddProductToCart(resolve<ShoppingTasks>()));
-        }
-
-        Dependency resolve<Dependency>()
-        {
-            return IOC.resolve.instance_of<Dependency>();
-        }
-
-        void register<Dependency>(Func<object> factory)
-        {
-            container.Add(typeof (Dependency), new FunctionalContainerItemFactory(factory));
-        }
-
-        void register<Dependency>(Dependency item)
-        {
-            container.Add(typeof (Dependency), new FunctionalContainerItemFactory(() => item));
+            container.register<ViewMainDepartments>(() => new ViewMainDepartments(container.instance_of<CatalogBrowsingTasks>(), container.instance_of<ResponseEngine>()));
+            container.register<ViewSubDepartments>(() => new ViewSubDepartments(container.instance_of<ResponseEngine>(), container.instance_of<CatalogBrowsingTasks>()));
+            container.register<ViewProductsInDepartment>(() => new ViewProductsInDepartment(container.instance_of<ResponseEngine>(), container.instance_of<CatalogBrowsingTasks>()));
+            container.register<AddProductToCart>(() => new AddProductToCart(container.instance_of<ShoppingTasks>()));
         }
     }
-}
-
 }

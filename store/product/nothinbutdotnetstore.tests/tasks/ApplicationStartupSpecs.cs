@@ -19,7 +19,6 @@ namespace nothinbutdotnetstore.tests.tasks
                 ApplicationStartup.start();
             };
 
-
             it should_be_able_to_access_key_services_from_the_container = () =>
             {
                 IOC.resolve.instance_of<FrontController>().should_be_an_instance_of<DefaultFrontController>();

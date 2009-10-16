@@ -65,6 +65,10 @@
     <Compile Include="tasks\startup\ApplicationStartup.cs" />
     <Compile Include="tasks\startup\ApplicationStartupItem.cs" />
     <Compile Include="tasks\startup\ConfigureApplicationCommands.cs" />
+    <Compile Include="tasks\startup\ConfigureFrontController.cs" />
+    <Compile Include="tasks\startup\ConfigureRouting.cs" />
+    <Compile Include="tasks\startup\ConfigureServiceLayer.cs" />
+    <Compile Include="tasks\startup\MutableContainer.cs" />
     <Compile Include="tasks\stubs\StubCatalogBrowsingTasks.cs" />
     <Compile Include="web\application\AddProductToCart.cs" />
     <Compile Include="web\application\ViewModelKeys.cs" />

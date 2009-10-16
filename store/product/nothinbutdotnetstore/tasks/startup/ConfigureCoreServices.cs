@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using developwithpassion.commons.core.infrastructure.containers;
 using nothinbutdotnetstore.infrastructure.containers;
 
 namespace nothinbutdotnetstore.tasks.startup
 {
-    public class ConfigureCoreServices : ApplicationStartupItem
+    public class ConfigureCoreServices : ApplicationStartupStep
     {
         MutableContainer container;
 

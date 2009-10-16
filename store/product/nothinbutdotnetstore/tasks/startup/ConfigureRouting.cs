@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using nothinbutdotnetstore.infrastructure.containers;
 using nothinbutdotnetstore.web.application;
 using nothinbutdotnetstore.web.core;
 
 namespace nothinbutdotnetstore.tasks.startup
 {
-    public class ConfigureRouting : ApplicationStartupItem
+    public class ConfigureRouting : ApplicationStartupStep
     {
         MutableContainer container;
 

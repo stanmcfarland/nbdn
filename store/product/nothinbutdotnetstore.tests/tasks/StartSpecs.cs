@@ -31,7 +31,7 @@ namespace nothinbutdotnetstore.tests.tasks
 
             because b = () =>
             {
-                Start.load_pipeline_from(file_reader);
+                Start.by_loading_pipeline_from(file_reader);
             };
 
             it should_create_the_types_in_the_file = () =>

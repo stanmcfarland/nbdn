@@ -1,9 +1,9 @@
-﻿using nothinbutdotnetstore.infrastructure.containers;
+using nothinbutdotnetstore.infrastructure.containers;
 using nothinbutdotnetstore.tasks.stubs;
 
 namespace nothinbutdotnetstore.tasks.startup
 {
-    public class ConfigureServiceLayer : ApplicationStartupItem
+    public class ConfigureServiceLayer : ApplicationStartupStep
     {
         MutableContainer container;
 

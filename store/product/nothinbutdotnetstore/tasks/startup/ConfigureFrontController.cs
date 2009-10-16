@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Web.Compilation;
 using nothinbutdotnetstore.infrastructure.containers;
 using nothinbutdotnetstore.web.core;
@@ -6,7 +6,7 @@ using nothinbutdotnetstore.web.core.stubs;
 
 namespace nothinbutdotnetstore.tasks.startup
 {
-    public class ConfigureFrontController : ApplicationStartupItem
+    public class ConfigureFrontController : ApplicationStartupStep
     {
         MutableContainer container;
 

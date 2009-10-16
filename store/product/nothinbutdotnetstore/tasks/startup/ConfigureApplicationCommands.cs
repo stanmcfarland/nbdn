@@ -4,7 +4,7 @@ using nothinbutdotnetstore.web.core;
 
 namespace nothinbutdotnetstore.tasks.startup
 {
-    public class ConfigureApplicationCommands : ApplicationStartupItem
+    public class ConfigureApplicationCommands : ApplicationStartupStep
     {
         MutableContainer container;
 
